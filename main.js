@@ -1,7 +1,7 @@
-import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'; // Correct import path for GLTFLoader
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'; // Import OrbitControls
-import { ARButton } from 'three/examples/jsm/webxr/ARButton.js'; // Import ARButton
+import * as THREE from './node_modules/three/build/three.module.js';
+import { GLTFLoader } from './node_modules/three/examples/jsm/loaders/GLTFLoader.js'; // Correct import path for GLTFLoader
+import { OrbitControls } from './node_modules/three/examples/jsm/controls/OrbitControls.js'; // Import OrbitControls
+import { ARButton } from './node_modules/three/examples/jsm/webxr/ARButton.js'; // Import ARButton
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
