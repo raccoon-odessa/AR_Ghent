@@ -17,7 +17,7 @@ const light = new THREE.AmbientLight(0x404040, 100);
 scene.add(light);
 
 const loader = new GLTFLoader();
-loader.load('/src/skull/skull.glb', function(gltf) {
+loader.load('https://raccoon-odessa.github.io/src/skull/skull.glb', function(gltf) {
     scene.add(gltf.scene);
     renderer.render(scene, camera);
 }, undefined, function(error) {
