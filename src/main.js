@@ -22,7 +22,7 @@ function init() {
     scene = new THREE.Scene();
 
     camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 100);
-    camera.position.set(0, 0, 5); // Move camera further from the model
+    camera.position.set(0, 0, 0.5); // Move camera further from the model
 
     const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 3);
     light.position.set(0.5, 1, 0.25);
@@ -70,22 +70,29 @@ function init() {
     window.addEventListener('resize', onWindowResize);
 
     // Add event listeners for mouse and touch events
+    console.log('Adding event listeners for touchstart and mousedown');
     window.addEventListener('touchstart', onSelect);
     window.addEventListener('mousedown', onSelect);
 }
 
 function onSelect(event) {
-    if (reticle.visible) {
-        // Check if it's a tap event (for touchscreens) or a mouse click event
-        if (event.type === 'touchstart' || (event.type === 'mousedown' && event.button === 0)) {
-            // Set the position of the loaded model to the position of the reticle
-            const model = scene.children.find(child => child.type === 'Group'); // Assuming the model is of type 'Group'
-            if (model) {
-                model.position.copy(reticle.position);
-                scene.add(model);
+    if (!renderer.xr.isPresenting) {
+        if (reticle.visible) {
+            // Check if it's a tap event (for touchscreens) or a left mouse click event
+            if (event.type === 'touchstart' || (event.type === 'mousedown' && event.button === 0)) {
+                // Set the position of the loaded model to the position of the reticle
+                const model = scene.children.find(child => child.type === 'Group'); // Assuming the model is of type 'Group'
+                if (model) {
+                    model.position.copy(reticle.position);
+                    scene.add(model);
+                } else {
+                    console.error('Model not found in scene');
+                }
             } else {
-                console.error('Model not found in scene');
+                console.error('Invalid event type or button:', event.type, event.button);
             }
+        } else {
+            console.error('Reticle not visible');
         }
     }
 }
