@@ -76,6 +76,7 @@ function init() {
 }
 
 function onSelect(event) {
+    console.log('Reticle visibility:', reticle.visible);
     if (!renderer.xr.isPresenting) {
         if (reticle.visible) {
             // Check if it's a tap event (for touchscreens) or a left mouse click event
@@ -96,7 +97,6 @@ function onSelect(event) {
         }
     }
 }
-
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
