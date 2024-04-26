@@ -62,7 +62,7 @@ function onSelect(event) {
             './skull.glb',
             function (gltf) {
                 const model = gltf.scene;
-                const desiredScale = 10; // Adjust this value as needed
+                const desiredScale = 9; // Adjust this value as needed
                 model.scale.set(desiredScale, desiredScale, desiredScale);
                 
                 // Get the position of the reticle in world coordinates
