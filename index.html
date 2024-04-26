@@ -3,11 +3,34 @@
 	<head>
 		<meta charset="utf-8">
 		<title>Ghent AR student work Museum</title>
-		<style>
-			body { margin: 0; }
-		</style>
+		<link rel="stylesheet" href="main.css">
 	</head>
 	<body>
+
+
+		<div id="mySidenav" class="sidenav">
+			<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+			<a href="#">Artwork 1</a>
+			<a href="#">Artwork 2</a>
+			<a href="#">Artwork 3</a>
+			<a href="#">Artwork 4</a>
+		  </div>
+		  
+		  
+		  <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; open</span>
+		  
+		  <script>
+		  function openNav() {
+			document.getElementById("mySidenav").style.width = "250px";
+		  }
+		  
+		  function closeNav() {
+			document.getElementById("mySidenav").style.width = "0";
+		  }
+		  </script>
+
+
+
 	    <!-- Reference the bundled JavaScript file -->
 		<script src="./dist/bundle.js"></script>
 	</body>
