@@ -62,11 +62,19 @@ function onSelect(event) {
             './skull.glb',
             function (gltf) {
                 const model = gltf.scene;
-				const desiredScale = 0.5; // Adjust this value as needed
-				model.scale.set(desiredScale, desiredScale, desiredScale)
-                model.position.copy(reticle.position);
+                const desiredScale = 10; // Adjust this value as needed
+                model.scale.set(desiredScale, desiredScale, desiredScale);
+                
+                // Get the position of the reticle in world coordinates
+                const reticleWorldPosition = new THREE.Vector3().setFromMatrixPosition(reticle.matrixWorld);
+                
+                // Set the position of the model to the position of the reticle
+                model.position.copy(reticleWorldPosition);
                 scene.add(model);
-                console.log('Loaded model position:', model.position);
+                
+                // Log positions
+                console.log('Reticle position:', reticleWorldPosition);
+                console.log('Model position:', model.position);
             },
             function (xhr) {
                 console.log((xhr.loaded / xhr.total * 100) + '% loaded');
