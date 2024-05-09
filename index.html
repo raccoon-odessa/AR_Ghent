@@ -4,21 +4,25 @@
 		<meta charset="utf-8">
 		<title>Ghent AR student work Museum</title>
 		<link rel="stylesheet" href="main.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 	</head>
 	<body>
 
 
 		<div id="mySidenav" class="sidenav">
 			<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-			<a href="#">Artwork 1</a>
-			<a href="#">Artwork 2</a>
-			<a href="#">Artwork 3</a>
-			<a href="#">Artwork 4</a>
+			<a class="ar-object" id="1" href="#">Artwork 1</a>
+			<a class="ar-object" id="2" href="#">Artwork 2</a>
+			<a class="ar-object" id="3" href="#">Artwork 3</a>
+		
 		  </div>
 		  
+		  <div id="container" style="position: fixed; background-color:black;"></div>
 		  
-		  <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; open</span>
+		  <span style="font-size:30px;cursor:pointer;position: absolute;" onclick="openNav()">&#9776; open</span>
 		  
+<div id="container" style="position: fixed; background-color:aqua;"></div>
+
 		  <script>
 		  function openNav() {
 			document.getElementById("mySidenav").style.width = "250px";
