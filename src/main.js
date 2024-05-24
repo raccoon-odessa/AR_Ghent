@@ -10,7 +10,7 @@ let reticle, current_object;
 let hitTestSource = null;
 let hitTestSourceRequested = false;
 
-const modelCount = 4;
+let modelCount = 4;
 let loadedModels = [];
 let currentModelIndex = 0;
 const radius = 3;
@@ -70,6 +70,7 @@ function init() {
     });
 
     createNavigationButtons();
+    createUploadButton();
     addModelRotationControls();
 }
 
@@ -241,6 +242,47 @@ function createNavigationButtons() {
             rotateArray(1);
         }
     };
+}
+
+function createUploadButton() {
+    const uploadButton = document.getElementById('uploadButton');
+    const fileInput = document.getElementById('fileInput');
+
+    uploadButton.onclick = () => {
+        fileInput.click();
+    };
+
+    fileInput.onchange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const arrayBuffer = e.target.result;
+                const newModelIndex = modelCount + 1;
+                const fileName = `3d/${newModelIndex}.glb`;
+
+                // Save file to server-side storage (not implemented in this example)
+                // You need a backend to handle file uploads and saving to the "3d" folder
+
+                // For this example, we assume the model is saved successfully
+                loadNewModel(arrayBuffer, newModelIndex);
+            };
+            reader.readAsArrayBuffer(file);
+        }
+    };
+}
+
+function loadNewModel(arrayBuffer, index) {
+    const loader = new GLTFLoader();
+    loader.parse(arrayBuffer, '', (glb) => {
+        let object = glb.scene;
+        scaleModelToFitCube(object, 1);
+        loadedModels.push(object);
+        scene.add(object);
+        modelCount++;
+        initializeArray();
+        updateCurrentModelIndex();
+    });
 }
 
 function addModelRotationControls() {
