@@ -10,7 +10,7 @@ let reticle, current_object;
 let hitTestSource = null;
 let hitTestSourceRequested = false;
 
-const modelCount = 6;
+const modelCount = 4;
 let loadedModels = [];
 let currentModelIndex = 0;
 const radius = 3;
@@ -82,6 +82,7 @@ function loadModels() {
             let object = glb.scene;
             scaleModelToFitCube(object, 1);
             loadedModels[i] = object;
+            scene.add(object);
             modelsLoaded++;
             if (modelsLoaded === modelCount) {
                 initializeArray();
@@ -103,11 +104,11 @@ function scaleModelToFitCube(model, size) {
 function initializeArray() {
     const angleStep = (Math.PI * 2) / modelCount;
     loadedModels.forEach((object, index) => {
-        let theta = (index * angleStep) + (angleStep / 2);
+        let theta = index * angleStep;
         object.position.set(Math.cos(theta) * radius, 0, Math.sin(theta) * radius);
         object.lookAt(0, 0, 0);
         object.rotateY(Math.PI);
-        scene.add(object);
+        console.log(`Initial Index: ${index}, Theta: ${theta}, Position: (${object.position.x}, ${object.position.y}, ${object.position.z})`);
     });
     updateCurrentModelIndex();
 }
@@ -116,52 +117,33 @@ function rotateArray(direction) {
     if (isAnimating) return;
 
     isAnimating = true;
-
-    if (direction === 1) {
-        rotateArrayClockwise().then(() => {
-            isAnimating = false;
-            updateCurrentModelIndex();
-        });
-    } else if (direction === -1) {
-        rotateArrayCounterClockwise().then(() => {
-            isAnimating = false;
-            updateCurrentModelIndex();
-        });
-    }
-}
-
-function rotateArrayClockwise() {
-    currentModelIndex = (currentModelIndex + 1) % modelCount;
+    console.log(`rotateArray called with direction: ${direction}, currentModelIndex: ${currentModelIndex}`);
 
     const angleStep = (Math.PI * 2) / modelCount;
-    const animations = loadedModels.map((object, index) => {
-        let theta = ((index - currentModelIndex + modelCount) % modelCount) * angleStep + (angleStep / 2);
-        return gsap.to(object.position, {
+    const targetRotation = direction * angleStep;
+
+    loadedModels.forEach((object, index) => {
+        const currentTheta = Math.atan2(object.position.z, object.position.x);
+        const newTheta = currentTheta + targetRotation;
+        const newPosition = {
+            x: Math.cos(newTheta) * radius,
+            z: Math.sin(newTheta) * radius
+        };
+
+        gsap.to(object.position, {
             duration: 1,
-            x: Math.cos(theta) * radius,
-            z: Math.sin(theta) * radius,
+            x: newPosition.x,
+            z: newPosition.z,
+            onComplete: () => {
+                if (index === modelCount - 1) {
+                    isAnimating = false;
+                    updateCurrentModelIndex();
+                }
+            }
         });
+
+        console.log(`Rotating Model - Index: ${index}, New Theta: ${newTheta}, New Position: (${newPosition.x}, 0, ${newPosition.z})`);
     });
-
-    console.log(`Rotate Clockwise: New Index ${currentModelIndex}`);
-    return Promise.all(animations.map(anim => anim.then()));
-}
-
-function rotateArrayCounterClockwise() {
-    currentModelIndex = (currentModelIndex - 1 + modelCount) % modelCount;
-
-    const angleStep = (Math.PI * 2) / modelCount;
-    const animations = loadedModels.map((object, index) => {
-        let theta = ((index - currentModelIndex + modelCount) % modelCount) * angleStep + (angleStep / 2);
-        return gsap.to(object.position, {
-            duration: 1,
-            x: Math.cos(theta) * radius,
-            z: Math.sin(theta) * radius,
-        });
-    });
-
-    console.log(`Rotate Counter-Clockwise: New Index ${currentModelIndex}`);
-    return Promise.all(animations.map(anim => anim.then()));
 }
 
 function updateCurrentModelIndex() {
@@ -170,6 +152,7 @@ function updateCurrentModelIndex() {
 
     loadedModels.forEach((object, index) => {
         const distance = camera.position.distanceTo(object.position);
+        console.log(`Model Index: ${index}, Position: (${object.position.x}, ${object.position.y}, ${object.position.z}), Distance: ${distance}`);
         if (distance < minDistance) {
             minDistance = distance;
             closestIndex = index;
@@ -177,6 +160,9 @@ function updateCurrentModelIndex() {
     });
 
     currentModelIndex = closestIndex;
+    current_object = loadedModels[currentModelIndex];
+
+    console.log(`current_object updated: Model Index ${currentModelIndex}`);
 
     const leftModelIndex = (currentModelIndex - 1 + modelCount) % modelCount;
     const rightModelIndex = (currentModelIndex + 1) % modelCount;
@@ -287,7 +273,7 @@ function addModelRotationControls() {
                     'XYZ'
                 ));
 
-            loadedModels[currentModelIndex].quaternion.multiplyQuaternions(deltaRotationQuaternion, loadedModels[currentModelIndex].quaternion);
+            current_object.quaternion.multiplyQuaternions(deltaRotationQuaternion, current_object.quaternion);
 
             previousMousePosition = {
                 x: e.offsetX,
