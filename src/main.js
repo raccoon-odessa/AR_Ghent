@@ -26,7 +26,7 @@ function init() {
     scene = new THREE.Scene();
 
     camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 20);
-    camera.position.set(0, 1, -5);
+    camera.position.set(0, 1, -4);
     camera.lookAt(0, 0, 0);
 
     const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 3);
@@ -81,13 +81,13 @@ function loadModels() {
     for (let i = 0; i < modelCount; i++) {
         loader.load(`${i + 1}.glb`, function (glb) {
             let object = glb.scene;
-            scaleModelToFitCube(object, 1);
+            scaleModelToFitCube(object, 2);
             loadedModels[i] = object;
             scene.add(object);
             modelsLoaded++;
             if (modelsLoaded === modelCount) {
                 initializeArray();
-                updateCurrentModelIndex();
+                updateCurrentModelIndex(true);
             }
         });
     }
@@ -111,7 +111,7 @@ function initializeArray() {
         object.rotateY(Math.PI);
         console.log(`Initial Index: ${index}, Theta: ${theta}, Position: (${object.position.x}, ${object.position.y}, ${object.position.z})`);
     });
-    updateCurrentModelIndex();
+    updateCurrentModelIndex(true);
 }
 
 function rotateArray(direction) {
@@ -147,7 +147,7 @@ function rotateArray(direction) {
     });
 }
 
-function updateCurrentModelIndex() {
+function updateCurrentModelIndex(resetCamera = false) {
     let minDistance = Infinity;
     let closestIndex = 0;
 
@@ -172,6 +172,18 @@ function updateCurrentModelIndex() {
     console.log(`Rotating Model Index: ${currentModelIndex}`);
     console.log(`Left Model Index: ${leftModelIndex}`);
     console.log(`Right Model Index: ${rightModelIndex}`);
+
+    if (resetCamera) {
+        focusCameraOnModel(current_object);
+    }
+}
+
+function focusCameraOnModel(model) {
+    const box = new THREE.Box3().setFromObject(model);
+    const center = new THREE.Vector3();
+    box.getCenter(center);
+    camera.position.set(center.x, center.y + 1, center.z - 5);
+    camera.lookAt(center);
 }
 
 function onWindowResize() {
@@ -281,7 +293,7 @@ function loadNewModel(arrayBuffer, index) {
         scene.add(object);
         modelCount++;
         initializeArray();
-        updateCurrentModelIndex();
+        updateCurrentModelIndex(true);
     });
 }
 
