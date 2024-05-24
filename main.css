@@ -1,12 +1,12 @@
 body {
-    background-color: #000;
-    color: #f1f1f1;
+  background-color: #000;
+  color: #f1f1f1;
   font-family: "Lato", sans-serif;
+  margin: 0;
+  overflow: hidden;
 }
 
-
-
-
+/* Existing sidenav styles */
 .sidenav {
   height: 100%;
   width: 0;
@@ -44,4 +44,46 @@ body {
 @media screen and (max-height: 450px) {
   .sidenav {padding-top: 15px;}
   .sidenav a {font-size: 18px;}
+}
+
+/* New button styles */
+button {
+  position: absolute;
+  padding: 20px;
+  font-size: 24px;
+  color: white;
+  background-color: transparent;
+  border: 2px solid white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#leftButton {
+  top: 50%;
+  left: 20px;
+  transform: translateY(-50%);
+}
+
+#rightButton {
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+}
+
+button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Style for the AR button */
+.ar-button {
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 24px;
+  color: white;
+  background-color: transparent;
+  border: 2px solid white;
+  border-radius: 8px;
+  padding: 10px 20px;
+  cursor: pointer;
 }
