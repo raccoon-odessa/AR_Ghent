@@ -10,7 +10,7 @@ let reticle, current_object;
 let hitTestSource = null;
 let hitTestSourceRequested = false;
 
-let modelCount = 4;
+let modelCount = 3;
 let loadedModels = [];
 let currentModelIndex = 0;
 const radius = 3;
